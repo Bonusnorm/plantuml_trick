@@ -141,5 +141,6 @@ dmypy.json
 .pyre/
 
 #### dev stuff
-test.puml
+test*
+!test/*
 .config

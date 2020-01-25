@@ -17,14 +17,15 @@ Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
 ```yaml
 tricks:
-  - plantuml_trick.Plantuml:
-      patterns: ['*.plantuml', '*.puml']
-      destination_suffix: .puml.svg
-      source_directory: .
-      destination_directory: .
-      opts:
-        - [--config, ./config]
-
+  - plantuml_trick.compiler.PlantumlTrick:
+      src_dir: .
+      patterns: ["*.puml","*.plantuml"]
+      docker_image: miy4/plantuml
+      compile_opts:
+        - "-config .plantuml.cfg"
+        - "-tsvg"
+        - "-failfast2"
+        - "-charset utf-8"
 ```
 
 ```bash
