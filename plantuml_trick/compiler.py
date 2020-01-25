@@ -37,7 +37,6 @@ class AutoCompileTrick(Trick):
         self.dest_ext = kwargs.pop("dest_ext")
         self.docker_image = kwargs.pop("docker_image", None)
         self.compile_opts = kwargs.pop("compile_opts", [])
-        self.dest_ext_initial = self.dest_ext
 
         super(AutoCompileTrick, self).__init__(**kwargs)
 
@@ -65,15 +64,22 @@ class AutoCompileTrick(Trick):
             self.compile(event.dest_path)
 
     def get_altered_dest_ext(self, src_path):
-        return ".{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
+        return "{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
 
-    def get_dest_fname(self, src_fname):
+    def get_dest_fname(self, src_fname, suffix=None):
         # TODO; refactor and test with nested directories
         return (
             src_fname.replace(self.src_dir, self.dest_dir).rsplit(".", 1)[0]
             + "."
-            + self.dest_ext
+            + (suffix if suffix else self.dest_ext)
         )
+
+    def get_dest_path(self, src_path):
+        former = self.get_dest_fname(src_path)
+        suffix = self.get_altered_dest_ext(src_path)
+        path = os.path.splitext(former)[0]
+        new = "{}.{}".format(path, suffix)
+        return former, new
 
     def compile(self, src_path):
         client = docker.from_env()
@@ -81,7 +87,7 @@ class AutoCompileTrick(Trick):
         cmd = " ".join([*self.compile_opts, src_path])
         print("Compiling {}".format(src_path))
 
-        result = client.containers.run(
+        client.containers.run(
             image=self.docker_image,
             stderr=True,
             stdout=True,
@@ -92,17 +98,15 @@ class AutoCompileTrick(Trick):
             command=cmd,
         )
 
-        print(result)
-
-        # TODO insert suffix
-        # suffix = self.get_altered_dest_ext(src_path)
-        # print(suffix)
+        former, new = self.get_dest_path(src_path)
+        os.replace(former, new)
 
     def remove(self, filename):
         with suppress(FileNotFoundError):
             dest_file = os.path.normpath(
                 os.path.join(
-                    os.path.abspath(self.dest_dir), self.get_dest_fname(filename),
+                    os.path.abspath(self.dest_dir),
+                    self.get_dest_fname(filename, self.get_altered_dest_ext(filename)),
                 ),
             )
             print("Removing {}".format(dest_file))
