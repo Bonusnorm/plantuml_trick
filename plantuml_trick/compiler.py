@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import fnmatch
 import os
+import re
 from contextlib import suppress
-from string import Template
+from functools import reduce
 from typing import Dict
 from typing import List
 
@@ -11,7 +12,7 @@ from watchdog.tricks import Trick
 
 from plantuml_trick import utils
 
-default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8"]
+default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8", "-pipe"]
 
 opt_to_ext_map: Dict[str, str] = {
     "-teps": "eps",
@@ -67,6 +68,7 @@ class AutoCompileTrick(Trick):
         return ".{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
 
     def get_dest_fname(self, src_fname):
+        # TODO; refactor and test with nested directories
         return (
             src_fname.replace(self.src_dir, self.dest_dir).rsplit(".", 1)[0]
             + "."
@@ -79,7 +81,7 @@ class AutoCompileTrick(Trick):
         cmd = " ".join([*self.compile_opts, src_path])
         print("Compiling {}".format(src_path))
 
-        client.containers.run(
+        result = client.containers.run(
             image=self.docker_image,
             stderr=True,
             stdout=True,
@@ -89,6 +91,8 @@ class AutoCompileTrick(Trick):
             volumes={context: {"bind": "/work", "mode": "rw"}},
             command=cmd,
         )
+
+        print(result)
 
         # TODO insert suffix
         # suffix = self.get_altered_dest_ext(src_path)
@@ -120,10 +124,22 @@ class PlantumlTrick(AutoCompileTrick):
         docker_image: str = "miy4/plantuml",
         compile_opts=None,
     ):
+        opt_regex = r"(?<=-o )\S+$|(?<=-output )\S+$"
+
+        def filter_out_dir(opt):
+            return re.search(opt_regex, opt)
+
+        out_opt = list(filter(filter_out_dir, compile_opts))
+
+        dest_dir = src_dir
+        if out_opt:
+            possibly_found = re.search(opt_regex, out_opt.pop())
+            if possibly_found:
+                dest_dir = possibly_found.group(0)
+
         super(PlantumlTrick, self).__init__(
             src_dir=src_dir,
-            # TODO `dest_dir` might be derived by plantuml `-o` option
-            dest_dir=src_dir,
+            dest_dir=dest_dir,
             dest_ext=ext_from_opts(compile_opts),
             patterns=(patterns or ["*.puml", "*.plantuml"]),
             docker_image=docker_image,
