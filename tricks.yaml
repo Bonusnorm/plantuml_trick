@@ -1,0 +1,10 @@
+tricks:
+  - plantuml_trick.compiler.PlantumlTrick:
+      src_dir: .
+      dest_dir: .
+      patterns: ["*.puml","*.plantuml"]
+      docker_image: miy4/plantuml
+      compile_opts:
+        - "--config, ./config"
+        - "-tsvg"
+        - "-failfast2"
