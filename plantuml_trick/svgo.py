@@ -5,11 +5,7 @@ import docker
 from plantuml_trick.compiler import CompileTrick
 
 # https://github.com/svg/svgo/issues/439#issuecomment-147253790
-default_compile_opts = [
-    "--pretty",
-    "--indent=2",
-    '--config=\'{"plugins":[{"removeComments":false}]}\'',
-]
+default_compile_opts = ["--pretty", "--indent=2"]
 
 
 class SVGOTrick(CompileTrick):
