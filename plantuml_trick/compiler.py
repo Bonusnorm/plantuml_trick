@@ -103,8 +103,12 @@ class AutoCompileTrick(Trick):
     def remove(self, src_path):
         with suppress(FileNotFoundError):
             dest_file = self.get_altered_dest_fname(src_path)
+            base_dir, _ = os.path.split(dest_file)
             print("Removing {}".format(dest_file))
             os.remove(dest_file)
+            if not os.listdir(base_dir):
+                with suppress(OSError):
+                    os.rmdir(base_dir)
 
 
 def ext_from_opts(opts=None):
