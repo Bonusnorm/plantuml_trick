@@ -7,7 +7,8 @@ Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
 ```yaml
 tricks:
-  - plantuml_trick.compiler.PlantumlTrick:
+  -
+    plantuml_trick.plantuml.PlantumlTrick:
       compile_opts:
         # ------------------------------ Defaults: -----------------
         - "-tsvg"
@@ -22,7 +23,15 @@ tricks:
       docker_image: miy4/plantuml
       insert_infix: true
       conjunction_removal: true
-
+      # --- Customization examples ---
+      postprocess:
+        svg:
+          docker_image: thorisalaptop/svgo
+          compile_opts:
+            - "--pretty"
+            - "--indent=2"
+            - |-
+              --config='{"plugins":[{"removeComments":false}]}'
 ```
 
 Example `.plantuml.cfg`:

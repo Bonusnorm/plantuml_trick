@@ -1,4 +1,4 @@
-from plantuml_trick.compiler import PlantumlTrick
+from plantuml_trick.plantuml import PlantumlTrick
 
 
 def test_plantuml_compile() -> None:
