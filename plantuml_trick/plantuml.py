@@ -7,6 +7,7 @@ from typing import List
 import docker
 
 from plantuml_trick.compiler import AutoCompileBaseTrick
+from plantuml_trick.mixed_line_ending import main as mixed_line_ending
 from plantuml_trick.svgo import SVGOTrick
 
 default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8", "-pipe"]
@@ -44,7 +45,7 @@ class PlantumlTrick(AutoCompileBaseTrick):
         docker_image: str = "miy4/plantuml",
         compile_opts=None,
         dest_ext=None,
-        postprocess=None,
+        postprocess={},
     ):
         opt_regex = r"(?<=-o )\S+$|(?<=-output )\S+$"
 
@@ -64,6 +65,8 @@ class PlantumlTrick(AutoCompileBaseTrick):
         self.postprocess_opts = (
             postprocess.get(self.ext_from_opts) if postprocess else None
         )
+
+        self.postprocess = postprocess
 
         super(PlantumlTrick, self).__init__(
             src_dir=src_dir,
@@ -100,6 +103,9 @@ class PlantumlTrick(AutoCompileBaseTrick):
             with suppress(FileNotFoundError):
                 print("Moving: {} -> {}".format(former, new))
                 os.replace(former, new)
+
+        if self.postprocess.get("mixed_line_ending"):
+            mixed_line_ending([*self.postprocess.get("mixed_line_ending"), new])
 
         if self.postprocess_opts and self.postprocess_opts.get("compile_opts"):
             if self.ext_from_opts == "svg":

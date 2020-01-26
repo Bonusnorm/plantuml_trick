@@ -6,21 +6,23 @@ tricks:
         - "-tsvg"
         - "-failfast2"
         - "-charset utf-8"
-        # --- Customization examples ---
+        #                      --- Customization examples ---
         # - "-output diagrams"
-        # - "-config .plantuml.cfg"
+        - "-config .plantuml.cfg"
       # -------------------------------- Defaults: -----------------
       src_dir: .
       patterns: ["*.puml","*.plantuml"]
       docker_image: miy4/plantuml
       insert_infix: true
       conjunction_removal: true
-      # --- Customization examples ---
+      #                         --- Customization examples ---
       postprocess:
-        svg:
-          docker_image: thorisalaptop/svgo
-          compile_opts:
-            - "--pretty"
-            - "--indent=2"
-            - |-
-              --config='{"plugins":[{"removeComments":false}]}'
+        mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
+          - '--fix=lf'
+#        svg:
+#          docker_image: thorisalaptop/svgo
+#          compile_opts:
+#            - "--pretty"
+#            - "--indent=2"
+#            - |-
+#              --config='{"plugins":[{"cleanupAttrs": false},{"cleanupIDs": false},{"removeTitle": false}]}'

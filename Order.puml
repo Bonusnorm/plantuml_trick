@@ -1,0 +1,6 @@
+@startuml
+left to right direction
+
+rectangle Order as Order
+Order --> (Customer)
+@enduml

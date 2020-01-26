@@ -1,5 +1,8 @@
 # plantuml trick
-watchdog script to generate images from plantuml files
+
+Converts PlantUML to images;
+
+![Order-UML](./Order.puml.svg "UML Example")
 
 ## Example
 
@@ -25,11 +28,13 @@ tricks:
       conjunction_removal: true
       # --- Customization examples ---
       postprocess:
+        mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
+          - '--fix=lf'
         svg:
           docker_image: thorisalaptop/svgo
           compile_opts:
             - "--pretty"
-            - "--indent=2"
+            - "--indent=4"
             - |-
               --config='{"plugins":[{"removeComments":false}]}'
 ```
