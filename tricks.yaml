@@ -1,11 +1,16 @@
 tricks:
   - plantuml_trick.compiler.PlantumlTrick:
-      src_dir: .
-      patterns: ["*.puml","*.plantuml"]
-      docker_image: miy4/plantuml
       compile_opts:
-        - "-config .plantuml.cfg"
+        # ------------------------------ Defaults: -----------------
         - "-tsvg"
         - "-failfast2"
         - "-charset utf-8"
-        - "-output rendered"
+        # --- Customization examples ---
+        # - "-output diagrams"
+        # - "-config .plantuml.cfg"
+      # -------------------------------- Defaults: -----------------
+      src_dir: .
+      patterns: ["*.puml","*.plantuml"]
+      docker_image: miy4/plantuml
+      insert_infix: true
+      conjunction_removal: true

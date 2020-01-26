@@ -34,6 +34,8 @@ class AutoCompileTrick(Trick):
         self.src_dir = os.path.abspath(src_dir)
         self.dest_dir = dest_dir
         self.dest_ext = kwargs.pop("dest_ext")
+        self.insert_infix = kwargs.pop("insert_infix")
+        self.conjunction_removal = kwargs.pop("conjunction_removal")
         self.docker_image = kwargs.pop("docker_image", None)
         self.compile_opts = kwargs.pop("compile_opts", [])
 
@@ -66,6 +68,9 @@ class AutoCompileTrick(Trick):
         return "{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
 
     def get_altered_dest_fname(self, src_fname):
+        if not self.insert_infix:
+            return self.get_dest_fname(src_fname)
+
         base_dir, file = os.path.split(src_fname)
         dest_dir = os.path.join(base_dir, self.dest_dir)
         dest_file = "{}.{}".format(file, self.dest_ext)
@@ -94,21 +99,23 @@ class AutoCompileTrick(Trick):
             command=cmd,
         )
 
-        former = self.get_dest_fname(src_path)
-        new = self.get_altered_dest_fname(src_path)
-        with suppress(FileNotFoundError):
-            print("Moving: {} -> {}".format(former, new))
-            os.replace(former, new)
+        if self.insert_infix:
+            former = self.get_dest_fname(src_path)
+            new = self.get_altered_dest_fname(src_path)
+            with suppress(FileNotFoundError):
+                print("Moving: {} -> {}".format(former, new))
+                os.replace(former, new)
 
     def remove(self, src_path):
-        with suppress(FileNotFoundError):
-            dest_file = self.get_altered_dest_fname(src_path)
-            base_dir, _ = os.path.split(dest_file)
-            print("Removing {}".format(dest_file))
-            os.remove(dest_file)
-            if not os.listdir(base_dir):
-                with suppress(OSError):
-                    os.rmdir(base_dir)
+        if self.conjunction_removal:
+            with suppress(FileNotFoundError):
+                dest_file = self.get_altered_dest_fname(src_path)
+                base_dir, _ = os.path.split(dest_file)
+                print("Removing {}".format(dest_file))
+                os.remove(dest_file)
+                if not os.listdir(base_dir):
+                    with suppress(OSError):
+                        os.rmdir(base_dir)
 
 
 def ext_from_opts(opts=None):
@@ -123,6 +130,8 @@ class PlantumlTrick(AutoCompileTrick):
         self,
         src_dir: str = ".",
         patterns: List[str] = None,
+        insert_infix=True,
+        conjunction_removal=True,
         docker_image: str = "miy4/plantuml",
         compile_opts=None,
     ):
@@ -141,6 +150,8 @@ class PlantumlTrick(AutoCompileTrick):
 
         super(PlantumlTrick, self).__init__(
             src_dir=src_dir,
+            insert_infix=insert_infix,
+            conjunction_removal=conjunction_removal,
             dest_dir=dest_dir,
             dest_ext=ext_from_opts(compile_opts),
             patterns=(patterns or ["*.puml", "*.plantuml"]),
