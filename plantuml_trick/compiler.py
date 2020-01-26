@@ -3,7 +3,6 @@ import fnmatch
 import os
 import re
 from contextlib import suppress
-from functools import reduce
 from typing import Dict
 from typing import List
 
@@ -33,7 +32,7 @@ opt_to_ext_map: Dict[str, str] = {
 class AutoCompileTrick(Trick):
     def __init__(self, src_dir, dest_dir, **kwargs):
         self.src_dir = os.path.abspath(src_dir)
-        self.dest_dir = os.path.abspath(dest_dir)
+        self.dest_dir = dest_dir
         self.dest_ext = kwargs.pop("dest_ext")
         self.docker_image = kwargs.pop("docker_image", None)
         self.compile_opts = kwargs.pop("compile_opts", [])
@@ -66,20 +65,17 @@ class AutoCompileTrick(Trick):
     def get_altered_dest_ext(self, src_path):
         return "{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
 
-    def get_dest_fname(self, src_fname, suffix=None):
-        # TODO; refactor and test with nested directories
-        return (
-            src_fname.replace(self.src_dir, self.dest_dir).rsplit(".", 1)[0]
-            + "."
-            + (suffix if suffix else self.dest_ext)
-        )
+    def get_altered_dest_fname(self, src_fname):
+        base_dir, file = os.path.split(src_fname)
+        dest_dir = os.path.join(base_dir, self.dest_dir)
+        dest_file = "{}.{}".format(file, self.dest_ext)
+        return os.path.join(dest_dir, dest_file)
 
-    def get_dest_path(self, src_path):
-        former = self.get_dest_fname(src_path)
-        suffix = self.get_altered_dest_ext(src_path)
-        path = os.path.splitext(former)[0]
-        new = "{}.{}".format(path, suffix)
-        return former, new
+    def get_dest_fname(self, src_fname):
+        base_dir, file = os.path.split(src_fname)
+        dest_dir = os.path.join(base_dir, self.dest_dir)
+        root, _ = os.path.splitext(file)
+        return os.path.join(dest_dir, "{}.{}".format(root, self.dest_ext))
 
     def compile(self, src_path):
         client = docker.from_env()
@@ -98,17 +94,15 @@ class AutoCompileTrick(Trick):
             command=cmd,
         )
 
-        former, new = self.get_dest_path(src_path)
-        os.replace(former, new)
-
-    def remove(self, filename):
+        former = self.get_dest_fname(src_path)
+        new = self.get_altered_dest_fname(src_path)
         with suppress(FileNotFoundError):
-            dest_file = os.path.normpath(
-                os.path.join(
-                    os.path.abspath(self.dest_dir),
-                    self.get_dest_fname(filename, self.get_altered_dest_ext(filename)),
-                ),
-            )
+            print("Moving: {} -> {}".format(former, new))
+            os.replace(former, new)
+
+    def remove(self, src_path):
+        with suppress(FileNotFoundError):
+            dest_file = self.get_altered_dest_fname(src_path)
             print("Removing {}".format(dest_file))
             os.remove(dest_file)
 

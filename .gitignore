@@ -143,4 +143,5 @@ dmypy.json
 #### dev stuff
 test*
 !test/*
+test/resources
 .config
