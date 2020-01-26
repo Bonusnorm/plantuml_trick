@@ -8,10 +8,31 @@ Converts PlantUML to images;
 
 Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
+## Basic
+
+Simple configuration mostly relying on defaults:
+
 ```yaml
 tricks:
   -
     plantuml_trick.plantuml.PlantumlTrick:
+      postprocess:
+        mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
+          - '--fix=lf'
+```
+## Configuration Options
+
+Disabled by default, there is an option to invoke `svgo` on the generated SVG files so to prettify them.
+
+Other options control the behaviour of the watcher itself, such as `conjunction_removal` or `insert_infix`.
+
+See below for possible config tweaks:
+
+```yaml
+tricks:
+  -
+    plantuml_trick.plantuml.PlantumlTrick:
+      # see https://plantuml.com/command-line
       compile_opts:
         # ------------------------------ Defaults: -----------------
         - "-tsvg"
@@ -28,16 +49,20 @@ tricks:
       conjunction_removal: true
       # --- Customization examples ---
       postprocess:
+        # see https://github.com/pre-commit/pre-commit-hooks/tree/v2.4.0
         mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
           - '--fix=lf'
         svg:
           docker_image: thorisalaptop/svgo
+          # options -- see https://github.com/svg/svgo
           compile_opts:
             - "--pretty"
             - "--indent=4"
             - |-
               --config='{"plugins":[{"removeComments":false}]}'
 ```
+
+## Customizing the theme of generated images
 
 Example `.plantuml.cfg`:
 
@@ -47,8 +72,9 @@ skinparam defaultFontName "Ubuntu Mono, Fira Mono, Sans-Serif"
 skinparam defaultFontSize 14
 skinparam entityBackgroundColor white
 skinparam linetype ortho
-
 ```
+
+## Invoke the compiler on file changes
 
 ```bash
 watchmedo tricks-from tricks.yaml

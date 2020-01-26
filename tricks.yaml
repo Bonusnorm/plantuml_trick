@@ -1,28 +1,6 @@
 tricks:
   -
     plantuml_trick.plantuml.PlantumlTrick:
-      compile_opts:
-        # ------------------------------ Defaults: -----------------
-        - "-tsvg"
-        - "-failfast2"
-        - "-charset utf-8"
-        #                      --- Customization examples ---
-        # - "-output diagrams"
-        - "-config .plantuml.cfg"
-      # -------------------------------- Defaults: -----------------
-      src_dir: .
-      patterns: ["*.puml","*.plantuml"]
-      docker_image: miy4/plantuml
-      insert_infix: true
-      conjunction_removal: true
-      #                         --- Customization examples ---
       postprocess:
         mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
           - '--fix=lf'
-#        svg:
-#          docker_image: thorisalaptop/svgo
-#          compile_opts:
-#            - "--pretty"
-#            - "--indent=2"
-#            - |-
-#              --config='{"plugins":[{"cleanupAttrs": false},{"cleanupIDs": false},{"removeTitle": false}]}'

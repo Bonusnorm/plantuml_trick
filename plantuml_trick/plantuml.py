@@ -52,7 +52,7 @@ class PlantumlTrick(AutoCompileBaseTrick):
         def filter_out_dir(opt):
             return re.search(opt_regex, opt)
 
-        out_opt = list(filter(filter_out_dir, compile_opts))
+        out_opt = list(filter(filter_out_dir, (compile_opts or default_compile_opts)))
 
         dest_dir = src_dir
         if out_opt:
