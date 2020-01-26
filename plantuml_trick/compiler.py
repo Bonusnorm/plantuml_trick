@@ -63,9 +63,6 @@ class AutoCompileTrick(Trick):
         if is_pattern_match and is_in_scope:
             self.compile(event.dest_path)
 
-    def get_altered_dest_ext(self, src_path):
-        return "{}.{}".format(src_path.rsplit(".", 1).pop(), self.dest_ext)
-
     def get_dest_fname(self, src_fname, suffix=None):
         # TODO; refactor and test with nested directories
         return (
@@ -73,13 +70,6 @@ class AutoCompileTrick(Trick):
             + "."
             + (suffix if suffix else self.dest_ext)
         )
-
-    def get_dest_path(self, src_path):
-        former = self.get_dest_fname(src_path)
-        suffix = self.get_altered_dest_ext(src_path)
-        path = os.path.splitext(former)[0]
-        new = "{}.{}".format(path, suffix)
-        return former, new
 
     def compile(self, src_path):
         client = docker.from_env()
@@ -98,15 +88,13 @@ class AutoCompileTrick(Trick):
             command=cmd,
         )
 
-        former, new = self.get_dest_path(src_path)
-        os.replace(former, new)
-
     def remove(self, filename):
         with suppress(FileNotFoundError):
             dest_file = os.path.normpath(
                 os.path.join(
                     os.path.abspath(self.dest_dir),
-                    self.get_dest_fname(filename, self.get_altered_dest_ext(filename)),
+                    os.path.abspath(self.dest_dir),
+                    self.get_dest_fname(filename),
                 ),
             )
             print("Removing {}".format(dest_file))
