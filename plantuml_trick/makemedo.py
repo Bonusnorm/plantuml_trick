@@ -31,7 +31,6 @@ def main(argv=None):
     trick = PlantumlTrick(**puml_options)
 
     for filename in args.filenames:
-        # TODO make it relative to src_dir
         trick.compile(filename)
 
     return retv

@@ -38,7 +38,7 @@ def get_ext_from_opts(opts=None):
 class PlantumlTrick(AutoCompileBaseTrick):
     def __init__(
         self,
-        src_dir: str = ".",
+        src_dir: str = os.getcwd(),
         patterns: List[str] = None,
         insert_infix=True,
         conjunction_removal=True,
@@ -67,6 +67,7 @@ class PlantumlTrick(AutoCompileBaseTrick):
         )
 
         self.postprocess = postprocess
+        self.context_path = os.path.abspath(src_dir)
 
         super(PlantumlTrick, self).__init__(
             src_dir=src_dir,
@@ -81,9 +82,10 @@ class PlantumlTrick(AutoCompileBaseTrick):
 
     def compile(self, src_path):
         client = docker.from_env()
-        context = self.src_dir
-        cmd = " ".join([*self.compile_opts, src_path])
-        print("Compiling {}".format(src_path))
+        context = self.context_path
+        relative_path = os.path.relpath(src_path, self.context_path)
+        cmd = " ".join([*self.compile_opts, relative_path])
+        print("Compiling {}".format(os.path.normpath(relative_path)))
 
         client.containers.run(
             image=self.docker_image,

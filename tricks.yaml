@@ -9,7 +9,7 @@ tricks:
         - "-charset utf-8"
         # --- Customization examples ---
         # - "-output diagrams"
-        # - "-config .plantuml.cfg"
+        - "-config .plantuml.cfg"
       # -------------------------------- Defaults: -----------------
       src_dir: .
       # --- Customization examples ---
