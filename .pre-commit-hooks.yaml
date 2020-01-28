@@ -1,7 +1,7 @@
 -   id: makemedo-plantuml
     name: Plantuml Trick Runner
     description: "Ensure plantuml files have corresponding images by utilizing watchdog / watchmedo trick config"
-    entry: makemedo_plantuml
+    entry: plantuml_trick.makemedo_plantuml
     args: [ "--config", "tricks.yaml" ]
-    language: python
+    language: system
     files: ''
