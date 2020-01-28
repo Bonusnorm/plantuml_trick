@@ -24,7 +24,10 @@ def main(argv=None):
     retv = 0
 
     if not options:
-        return 0
+        raise ValueError(
+            "Improper --config provided. Did you define '{}' settings?"
+            - format(PLANTUML_REF),
+        )
 
     puml_options = options[0].get(PLANTUML_REF)
 
