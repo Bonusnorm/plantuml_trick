@@ -10,7 +10,7 @@ from plantuml_trick.compiler import AutoCompileBaseTrick
 from plantuml_trick.mixed_line_ending import main as mixed_line_ending
 from plantuml_trick.svgo import SVGOTrick
 
-default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8", "-pipe"]
+default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8"]
 
 opt_to_ext_map: Dict[str, str] = {
     "-teps": "eps",
