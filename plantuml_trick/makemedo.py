@@ -1,9 +1,11 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+
 import argparse
+import sys
 
+from plantuml import PlantumlTrick
 from watchdog import watchmedo
-
-from plantuml_trick.plantuml import PlantumlTrick
 
 TRICKS_REF = "tricks"
 PLANTUML_REF = "plantuml_trick.plantuml.PlantumlTrick"
@@ -29,15 +31,13 @@ def main(argv=None):
             - format(PLANTUML_REF),
         )
 
-    puml_options = options[0].get(PLANTUML_REF)
-
-    trick = PlantumlTrick(**puml_options)
-
-    for filename in args.filenames:
-        trick.compile(filename)
+    for opts in options:
+        trick = PlantumlTrick(**opts.get(PLANTUML_REF))
+        for filename in args.filenames:
+            trick.compile(filename)
 
     return retv
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main(sys.argv[1:]))

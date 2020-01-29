@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import os
 import re
 from contextlib import suppress
@@ -5,10 +7,9 @@ from typing import Dict
 from typing import List
 
 import docker
-
-from plantuml_trick.compiler import AutoCompileBaseTrick
-from plantuml_trick.mixed_line_ending import main as mixed_line_ending
-from plantuml_trick.svgo import SVGOTrick
+from compiler import AutoCompileBaseTrick
+from mixed_line_ending import main as mixed_line_ending
+from svgo import SVGOTrick
 
 default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8"]
 
@@ -38,7 +39,7 @@ def get_ext_from_opts(opts=None):
 class PlantumlTrick(AutoCompileBaseTrick):
     def __init__(
         self,
-        src_dir: str = os.getcwd(),
+        src_dir: str = ".",
         patterns: List[str] = None,
         insert_infix=True,
         conjunction_removal=True,
@@ -55,7 +56,7 @@ class PlantumlTrick(AutoCompileBaseTrick):
         out_opt = list(filter(filter_out_dir, (compile_opts or default_compile_opts)))
 
         dest_dir = src_dir
-        if out_opt:
+        if out_opt and out_opt[0]:
             possibly_found = re.search(opt_regex, out_opt.pop())
             if possibly_found:
                 dest_dir = possibly_found.group(0)

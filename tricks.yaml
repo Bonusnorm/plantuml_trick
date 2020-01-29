@@ -17,3 +17,9 @@ tricks:
         # see https://github.com/pre-commit/pre-commit-hooks/tree/v2.4.0
         mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
           - '--fix=lf'
+  -
+    plantuml_trick.plantuml.PlantumlTrick:
+      # see https://plantuml.com/command-line
+      compile_opts:
+        # ------------------------------ Defaults: -----------------
+        - "-tpng"

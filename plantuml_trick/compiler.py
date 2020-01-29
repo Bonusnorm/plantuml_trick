@@ -1,16 +1,17 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+
 import fnmatch
 import os
 from contextlib import suppress
 
+from utils import trace_event
 from watchdog.tricks import Trick
-
-from plantuml_trick import utils
 
 
 class CompileTrick(Trick):
     def __init__(self, src_dir, dest_dir, **kwargs):
-        self.src_dir = os.path.abspath(src_dir)
+        self.src_dir = src_dir
         self.dest_dir = dest_dir
         self.dest_ext = kwargs.pop("dest_ext")
         self.insert_infix = kwargs.pop("insert_infix")
@@ -28,13 +29,13 @@ class CompileTrick(Trick):
             return self.get_dest_fname(src_fname)
 
         base_dir, file = os.path.split(src_fname)
-        dest_dir = os.path.join(base_dir, self.dest_dir)
+        dest_dir = os.path.normpath(os.path.join(base_dir, self.dest_dir))
         dest_file = "{}.{}".format(file, self.dest_ext)
         return os.path.join(dest_dir, dest_file)
 
     def get_dest_fname(self, src_fname):
         base_dir, file = os.path.split(src_fname)
-        dest_dir = os.path.join(base_dir, self.dest_dir)
+        dest_dir = os.path.normpath(os.path.join(base_dir, self.dest_dir))
         root, _ = os.path.splitext(file)
         return os.path.join(dest_dir, "{}.{}".format(root, self.dest_ext))
 
@@ -57,19 +58,19 @@ class AutoCompileBaseTrick(CompileTrick):
     def __init__(self, **kwargs):
         super(AutoCompileBaseTrick, self).__init__(**kwargs)
 
-    @utils.trace_event
+    @trace_event
     def on_modified(self, event):
         self.compile(event.src_path)
 
-    @utils.trace_event
+    @trace_event
     def on_deleted(self, event):
         self.remove(event.src_path)
 
-    @utils.trace_event
+    @trace_event
     def on_created(self, event):
         self.compile(event.src_path)
 
-    @utils.trace_event
+    @trace_event
     def on_moved(self, event):
         is_pattern_match = any(
             fnmatch.fnmatch(event.dest_path, elem) for elem in self.patterns
