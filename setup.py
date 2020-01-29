@@ -124,7 +124,15 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=["watchdog", "docker"],  # Optional
+    install_requires=[
+        "watchdog",
+        "docker",
+        # "pathtools>=0.1.1",
+        # 'pyobjc-framework-Cocoa>=4.2.2 ; sys_platform == "darwin"',
+        # 'pyobjc-framework-FSEvents>=4.2.2 ; sys_platform == "darwin"',
+        # "PyYAML>=3.10",
+        # "argh>=0.24.1",
+    ],  # Optional
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # `pip` to create the appropriate form of executable for the target
@@ -132,7 +140,9 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    entry_points={"console_scripts": ["makemedo_plantuml = makemedo:main"]},  # Optional
+    entry_points={
+        "console_scripts": ["makemedo_plantuml = plantuml_trick.makemedo:main"],
+    },  # Optional
     # List additional URLs that are relevant to your project as a dict.
     #
     # This field corresponds to the "Project-URL" metadata fields:
