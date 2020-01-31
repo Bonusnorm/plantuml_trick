@@ -4,8 +4,9 @@ from __future__ import absolute_import
 import argparse
 import sys
 
-from plantuml import PlantumlTrick
 from watchdog import watchmedo
+
+from .plantuml import PlantumlTrick
 
 TRICKS_REF = "tricks"
 PLANTUML_REF = "plantuml_trick.plantuml.PlantumlTrick"

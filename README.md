@@ -76,9 +76,27 @@ skinparam linetype ortho
 
 ## Invoke the compiler on file changes
 
-```bash
-watchmedo tricks-from tricks.yaml
 ```
+pip install git+git://github.com:Bonusnorm/plantuml_trick.git
+```
+
+### Using watchdog
+
+```
+pipenv run watchmedo tricks-from tricks.yaml
+```
+
+### On-Demand
+
+If you want to trigger the script on your own or let your IDE invoke it, use the following:
+
+```
+pipenv run makemedo_plantuml <filenames>
+```
+
+### As a pre-commit step
+
+
 
 ## Dev Setup
 ```sh

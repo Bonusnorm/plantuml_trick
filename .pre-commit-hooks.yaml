@@ -4,4 +4,3 @@
     entry: plantuml_trick.makemedo_plantuml
     args: [ "--config", "tricks.yaml" ]
     language: system
-    files: ''

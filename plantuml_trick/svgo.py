@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 import docker
-from compiler import CompileTrick
+
+from .compiler import CompileTrick
 
 # https://github.com/svg/svgo/issues/439#issuecomment-147253790
 default_compile_opts = ["--pretty", "--indent=2"]

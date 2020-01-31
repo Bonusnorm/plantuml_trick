@@ -7,9 +7,10 @@ from typing import Dict
 from typing import List
 
 import docker
-from compiler import AutoCompileBaseTrick
-from mixed_line_ending import main as mixed_line_ending
-from svgo import SVGOTrick
+
+from .compiler import AutoCompileBaseTrick
+from .mixed_line_ending import main as mixed_line_ending
+from .svgo import SVGOTrick
 
 default_compile_opts = ["-tsvg", "-failfast2", "-charset utf-8"]
 

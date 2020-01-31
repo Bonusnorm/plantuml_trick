@@ -5,8 +5,9 @@ import fnmatch
 import os
 from contextlib import suppress
 
-from utils import trace_event
 from watchdog.tricks import Trick
+
+from .utils import trace_event
 
 
 class CompileTrick(Trick):
