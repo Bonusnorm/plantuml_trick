@@ -3,23 +3,16 @@ tricks:
     plantuml_trick.plantuml.PlantumlTrick:
       # see https://plantuml.com/command-line
       compile_opts:
-        # ------------------------------ Defaults: -----------------
         - "-tsvg"
         - "-failfast2"
         - "-charset utf-8"
-        # --- Customization examples ---
-        # - "-output diagrams"
         - "-config .plantuml.cfg"
-      # -------------------------------- Defaults: -----------------
       src_dir: .
-      # --- Customization examples ---
       postprocess:
         # see https://github.com/pre-commit/pre-commit-hooks/tree/v2.4.0
-        mixed_line_ending: # 'auto', 'no', 'cr', 'crlf', 'lf'
+        mixed_line_ending:
           - '--fix=lf'
   -
     plantuml_trick.plantuml.PlantumlTrick:
-      # see https://plantuml.com/command-line
       compile_opts:
-        # ------------------------------ Defaults: -----------------
         - "-tpng"

@@ -8,6 +8,9 @@ Converts PlantUML to images;
 
 Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
+```
+pip install pipenv watchdog
+```
 ## Basic
 
 Simple configuration mostly relying on defaults:
@@ -77,7 +80,7 @@ skinparam linetype ortho
 ## Invoke the compiler on file changes
 
 ```
-pip install git+git://github.com:Bonusnorm/plantuml_trick.git
+pip install git+https://github.com/Bonusnorm/plantuml_trick.git@0.0.1a1.dev1
 ```
 
 ### Using watchdog
