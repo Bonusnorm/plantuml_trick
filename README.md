@@ -9,7 +9,7 @@ Converts PlantUML to images;
 Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
 ```
-pip install pipenv watchdog
+pip install git+git://github.com/Bonusnorm/plantuml_trick.git
 ```
 ## Basic
 
@@ -79,10 +79,6 @@ skinparam linetype ortho
 
 ## Invoke the compiler on file changes
 
-```
-pip install git+https://github.com/Bonusnorm/plantuml_trick.git@0.0.1a1.dev1
-```
-
 ### Using watchdog
 
 ```
@@ -98,7 +94,6 @@ pipenv run makemedo_plantuml <filenames>
 ```
 
 ### As a pre-commit step
-
 
 
 ## Dev Setup

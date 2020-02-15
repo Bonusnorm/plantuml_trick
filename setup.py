@@ -128,6 +128,8 @@ setup(
     install_requires=[
         "watchdog",
         "docker",
+        "pipenv",
+        "argh",
         # "pathtools>=0.1.1",
         # 'pyobjc-framework-Cocoa>=4.2.2 ; sys_platform == "darwin"',
         # 'pyobjc-framework-FSEvents>=4.2.2 ; sys_platform == "darwin"',
