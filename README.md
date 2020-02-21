@@ -4,7 +4,9 @@ Converts PlantUML to images;
 
 ![Order-UML](./Order.puml.svg "UML Example")
 
-## Example
+## Set up
+
+You'll need [docker desktop](https://docs.docker.com/) installed an running.
 
 Use with [watchdog](https://github.com/gorakhargosh/watchdog)
 
